@@ -35,13 +35,13 @@
 	            else if (t == "object" && v !== null) v = JSON.stringify(v);
 	            json.push((arr ? "" : '"' + n + '":') + String(v));
 	        }
-	        return (arr ? "[\n" : "{\n") + String(json) + (arr ? "]\n" : "}\n");
+	        return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
 	    }
 	};
 
     // "http://mars-reader.gbl.thehut.local:8080/mars-reader/product/marskey/bikerGB/id/11144155/small"
 	jQuery.getJSON(getParameterByName("url"), function(data) {
-		$('#output').html(stringify(data).replace(",", ",\n"));
+		$('#output').html(stringify(data).split(",").join(",<br>"));
 	}); 
   </script>
 
