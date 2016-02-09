@@ -1,0 +1,54 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <title>Mars CSRF</title>
+  <script src="jquery-2.2.0.js" ></script>
+</head>
+
+<body>
+
+  <script>
+	function getParameterByName(name, url) {
+	    if (!url) url = window.location.href;
+	    name = name.replace(/[\[\]]/g, "\\$&");
+	    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+	        results = regex.exec(url);
+	    if (!results) return null;
+	    if (!results[2]) return '';
+	    return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+
+	function stringify(obj) {
+	    var t = typeof (obj);
+	    if (t != "object" || obj === null) {
+	        // simple data type
+	        if (t == "string") obj = '"'+obj+'"';
+	        return String(obj);
+	    }
+	    else {
+	        // recurse array or object
+	        var n, v, json = [], arr = (obj && obj.constructor == Array);
+	        for (n in obj) {
+	            v = obj[n]; t = typeof(v);
+	            if (t == "string") v = '"'+v+'"';
+	            else if (t == "object" && v !== null) v = JSON.stringify(v);
+	            json.push((arr ? "" : '"' + n + '":') + String(v));
+	        }
+	        return (arr ? "[\n" : "{\n") + String(json) + (arr ? "]\n" : "}\n");
+	    }
+	};
+
+    // "http://mars-reader.gbl.thehut.local:8080/mars-reader/product/marskey/bikerGB/id/11144155/small"
+	jQuery.getJSON(getParameterByName("url"), function(data) {
+		$('#output').html(stringify(data).replace(",", ",\n"));
+	}); 
+  </script>
+
+  <pre id="output">
+
+  </pre>
+
+</body>
+
+</html>
